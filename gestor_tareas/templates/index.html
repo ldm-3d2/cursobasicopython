@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}To-Do List{% endblock %}
+
+{% block content %}
+  <h1>Lista de tareas</h1>
+
+  <form class="task-form" action="{{ url_for('add_task') }}" method="post">
+    <label for="title">Nueva tarea</label>
+    <input
+      id="title"
+      name="title"
+      type="text"
+      placeholder="Ejemplo: estudiar Flask"
+      required
+    />
+    <button type="submit">Agregar</button>
+  </form>
+
+  {% if tasks %}
+    <div class="task-list" role="list">
+      {% for task in tasks %}
+        <div
+          class="task-item{% if task.completed %} done{% endif %}"
+          role="listitem"
+        >
+          <span>{{ task.title }}</span>
+          {% if not task.completed %}
+            <form
+              action="{{ url_for('complete_task', task_id=task.id) }}"
+              method="post"
+            >
+              <button type="submit">Completar</button>
+            </form>
+          {% else %}
+            <small>Completada</small>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>No hay tareas por ahora. Agrega la primera.</p>
+  {% endif %}
+{% endblock %}
